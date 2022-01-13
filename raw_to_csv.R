@@ -9,18 +9,23 @@
 #   - Because Campbell loggers appends new downloads to the previous file path, 
 #     we need to remove overlap in the data frames
 #   - Should we remove data where the sensors were dry?
+#   - Crappy data at DK-SW around Aug 2nd, moved raft that day
+#   - Spotty data at TS-SW until May 1st, because of bad logger code
 
 
 # 1. Libraries and workspace ----------------------------------------------
 
 remove(list = ls())
 
+library(xts)
+library(dygraphs)
 library(purrr)
 library(lubridate)
 library(tidyverse)
 library(stringr)
 
 source("functions/download_fun.R")
+source("functions/prelim_plot.R")
 
 data_dir <- "data/2021/"
 
@@ -51,24 +56,63 @@ data <- data %>%
   
 
 #   3a. DK-SW cleaning ------------------------------------------------------
+#   - Crappy data at DK-SW around Aug 2nd. Site was dry, moved raft to a deeper spot. 
+SiteName <- "DK_SW"
+
+#Create a dygraph to cut bad data points
+df <- data %>% 
+  filter(Site_ID == SiteName) %>% 
+  select(c(Timestamp, CO2_HiConc_ppm))
+
+prelim_plot(df)
 
 data_DK <- data %>% 
-  filter(Site_ID == "DK_SW") 
+  filter(Site_ID == SiteName) %>% 
+  filter(Timestamp >= "2021-05-01 13:30:00")
+
 
 #   3b. TS-SW cleaning ------------------------------------------------------
+#   - Spotty data at TS-SW until May 1st, because of bad logger code
+SiteName <- "TS_SW"
+
+#Create a dygraph to cut out bad data points
+df <- data %>% 
+  filter(Site_ID == SiteName) %>% 
+  select(c(Timestamp, CO2_HiConc_ppm))
+
+prelim_plot(df)
 
 data_TS <- data %>% 
-  filter(Site_ID == "TS_SW") 
+  filter(Site_ID == SiteName) %>% 
+  filter(Timestamp >= "2021-04-14 12:30:00") %>% 
+  filter(Timestamp <= "2021-07-04 12:00:00" | Timestamp >= "2021-09-01 12:00:00") %>% 
+  filter(Timestamp <= "2021-12-31 12:00:00")
 
 #   3c. ND-SW cleaning ------------------------------------------------------
+SiteName <- "ND_SW"
+
+#Create a dygraph to cut bad data points
+df <- data %>% 
+  filter(Site_ID == SiteName) %>% 
+  select(c(Timestamp, CO2_HiConc_ppm))
+
+prelim_plot(df)
 
 data_ND <- data %>% 
-  filter(Site_ID == "ND_SW") 
+  filter(Site_ID == SiteName) %>% 
+  filter(Timestamp >= "2021-05-21 12:00:00")
 
 
+# 3d. Combine sites -------------------------------------------------------
+
+data_cleaned <- rbind(data_DK, data_ND, data_TS)
+
+rm(data_DK, data_ND, data_TS, df, SiteName)
 
 
-# 4. Convert time zone EDT to EST ---------------------------------------------------
+# 4. Convert time zone from EDT to EST ---------------------------------------------------
+
+
 
 
 # 5. Read the BC files -----------------------------------------------------
