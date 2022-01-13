@@ -115,9 +115,6 @@ rm(data_DK, data_ND, data_TS, df, SiteName)
 
 
 
-# 5. Read the BC files -----------------------------------------------------
 
-
-# 6. Combine into one large .csv ------------------------------------------
 
 
