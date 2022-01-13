@@ -103,16 +103,25 @@ data_ND <- data %>%
   filter(Timestamp >= "2021-05-21 12:00:00")
 
 
-# 3d. Combine sites -------------------------------------------------------
+# 3d. Combine JL sites -------------------------------------------------------
 
 data_cleaned <- rbind(data_DK, data_ND, data_TS)
 
 rm(data_DK, data_ND, data_TS, df, SiteName)
 
 
-# 4. Convert time zone from EDT to EST ---------------------------------------------------
+# 4. Convert time zone from EDT to EST at JL ---------------------------------------------------
 
+hrs <- hours(1)
 
+data_cleaned_EST <- data_cleaned %>% 
+  mutate(Timestamp = Timestamp - hrs)
+ 
+ 
+
+# XX. write csv -----------------------------------------------------------
+
+write_csv(data_cleaned_EST, file = paste0(data_dir,"eosGP_JL.csv"))
 
 
 
