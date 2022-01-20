@@ -1,16 +1,16 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Name: 2021 data clean & aggregate
+# Name: Raw to csv Jackson Lane
 # Coder: James Maze
 # Date: 13 Jan 2021
-# Purpose: Aggregate the raw downloads into a clean .csv
+# Purpose: Aggregate the raw downloads into a clean .csv for Jackson Lane
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #Notes:
 #   - Because Campbell loggers appends new downloads to the previous file path, 
 #     we need to remove overlap in the data frames
 #   - Should we remove data where the sensors were dry?
-#   - Crappy data at DK-SW around Aug 2nd, moved raft that day
-#   - Spotty data at TS-SW until May 1st, because of bad logger code
+#   - Crappy data at DK-SW around Aug 2nd 2021, moved raft that day
+#   - Spotty data at TS-SW until May 1st 2021, because of bad logger code
 
 
 # 1. Libraries and workspace ----------------------------------------------
@@ -33,7 +33,7 @@ data_dir <- "data/2021/"
 
 eosGP_files <- list.files(paste0(data_dir), full.names = TRUE)
 
-eosGP_files <- eosGP_files[str_detect(eosGP_files, "eosGP")]
+eosGP_files <- eosGP_files[str_detect(eosGP_files, "_eosGP")]
 
 data <- eosGP_files %>% 
   map(download_fun) %>% 
