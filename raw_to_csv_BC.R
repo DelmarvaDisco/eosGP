@@ -27,22 +27,41 @@ data_dir <- "data/2021/"
 
 # 2. Read in the data -----------------------------------------------------
 
+#Read in the files without HB-SW
+#Only files have nasty formatting. Do not run the download_fun
 data_exHB <- read_csv(paste0(data_dir,"BC_CO2_20210802_20211217.csv")) %>% 
   mutate("Timestamp" = mdy_hm(`Measurement Time`)) %>% 
   select(-c(`Measurement Time`, )) %>% 
   rename("XB_SW_CO2" = `Gnarly Bay - 145C CO2`) %>% 
-  rename
+  rename("OB_SW_CO2" = `Origin Bay - 145B CO2`) %>% 
+  rename("TP_CH_CO2" = `Outlet - 1458 CO2`) %>% 
+  rename("MB_SW_CO2" = `Mixing Bay - 1454 CO2`)
+
+#Read the full IWT file with HB-SW
+
+
+# 3. Make an dygraph showing all the BC data -----------------------------------------
 
 
 data_exHB <- data_exHB %>% 
-  pivot_longer(cols = )
+  pivot_longer(cols = c(XB_SW_CO2, OB_SW_CO2, TP_CH_CO2, MB_SW_CO2),
+               names_to = "Site_ID",
+               values_to = "CO2_ppm") %>% 
+  filter(!is.na(CO2_ppm)) %>% 
+  filter(!Site_ID == "MB_SW_CO2")
 
-letc <- ggplot(data = data_exHB,
-               mapping = aes(x = Timestamp, 
-                             y = GB_SW_CO2)) +
-  geom_line()
 
-(letc)
+
+all_sites <- ggplot(data = data_exHB,
+                    mapping = aes(x = Timestamp,
+                                  y = CO2_ppm, 
+                                  color = Site_ID)) +
+             geom_point() +
+  theme_bw()
+
+(all_sites)
+
+
 
 
 
