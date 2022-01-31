@@ -17,7 +17,5 @@ prelim_plot <- function(df){
   dygraph(xts_form, main = SiteName) %>% 
     dyRangeSelector() %>% 
     dyLegend() %>% 
-    dyAxis("y", label = "CO2_HiConc_ppm") %>% 
-    dyAxis("y2", label = "GP_TempC")
-    
+    dyAxis("y", label = "variable") 
 }
