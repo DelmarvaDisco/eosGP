@@ -37,8 +37,11 @@ data_exHB <- read_csv(paste0(data_dir,"BC_CO2_20210802_20211217.csv")) %>%
   rename("TP_CH_CO2" = `Outlet - 1458 CO2`) %>% 
   rename("MB_SW_CO2" = `Mixing Bay - 1454 CO2`)
 
-#Read the full IWT file with HB-SW
-
+#Read the full IWT file with HB-SW. Discard the other columns
+data_HB <- read_csv(paste0(data_dir, "BC_all_sensors_20210802_20211217.csv")) %>% 
+  select(c(`Measurement Time`, `Hummock Bay - 1459 CO2`)) %>% 
+  mutate("Timestamp" = mdy_hm(`Measurement Time`)) %>% 
+  rename("HB_SW_CO2" = `Hummock Bay - 1459 CO2`)
 
 # 3. Make an dygraph showing all the BC data -----------------------------------------
 
@@ -51,7 +54,7 @@ data_exHB <- data_exHB %>%
   filter(!Site_ID == "MB_SW_CO2")
 
 
-
+# Plot 
 all_sites <- ggplot(data = data_exHB,
                     mapping = aes(x = Timestamp,
                                   y = CO2_ppm, 
@@ -61,6 +64,21 @@ all_sites <- ggplot(data = data_exHB,
 
 (all_sites)
 
+# 4. HB-SW ----------------------------------------------------------------
+
+data_HB <- data_HB %>% 
+  filter(!is.na(HB_SW_CO2)) %>% 
+  filter(HB_SW_CO2 > 1000)
+
+HB_plot <- ggplot(data = data_HB, 
+                  mapping = aes(x = Timestamp,
+                                y = HB_SW_CO2)) +
+  geom_point() +
+  theme_bw() +
+  scale_y_continuous(limits = c(0, 20000)) +
+  ylab("HB-SW CO2 (ppm uncorrected)") 
+
+(HB_plot)
 
 
 
