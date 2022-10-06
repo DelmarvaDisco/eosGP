@@ -13,7 +13,7 @@ download_fun <- function(file_path){
                     col_names = TRUE,
                     skip = 1) %>% 
     as_tibble() %>% 
-    mutate(file = str_sub(file_path, 11)) %>% 
+    mutate(file = str_sub(file_path, 6)) %>% 
     mutate(Site_ID = str_sub(file, 1, 5))
   temp
 }

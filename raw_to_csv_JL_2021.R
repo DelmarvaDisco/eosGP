@@ -2,7 +2,7 @@
 # Name: Raw to csv Jackson Lane
 # Coder: James Maze
 # Date: 13 Jan 2021
-# Purpose: Aggregate the raw downloads into a clean .csv for Jackson Lane
+# Purpose: Aggregate the raw downloads into a clean .csv for Jackson Lane 2022 Deployment
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #Notes:
@@ -19,22 +19,20 @@ remove(list = ls())
 
 library(xts)
 library(dygraphs)
-library(purrr)
-library(lubridate)
 library(tidyverse)
-library(stringr)
 
 source("functions/download_fun.R")
 source("functions/prelim_plot.R")
 
-data_dir <- "data/2021/"
+data_dir <- "data/"
 
 # 2. Read the JL files ----------------------------------------------
 
 #Lists all files in data_dir
 files <- list.files(paste0(data_dir), full.names = TRUE)
 #Selects only the GP files
-eosGP_files <- files[str_detect(files, "_eosGP")]
+eosGP_files <- files[str_detect(files, "_eosGP")] 
+eosGP_files <- eosGP_files[str_detect(eosGP_files, "2021")]
 
 #Run the download function and combine GP files
 data <- eosGP_files %>% 

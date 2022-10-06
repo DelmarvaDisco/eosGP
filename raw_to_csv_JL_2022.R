@@ -2,32 +2,25 @@
 # Name: Raw to csv Jackson Lane
 # Coder: James Maze
 # Date: 5 May 2022
-# Purpose: Aggregate the raw downloads into a clean .csv for Jackson Lane
+# Purpose: Aggregate the raw downloads into a clean .csv for Jackson Lane 2022 Deployment
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #Notes:
-#   - Thus far, only cut data where sensors were not at the sites.
-#   - Should we remove data where the sensors were dry?
-#   - Crappy data at DK-SW around Aug 2nd 2021, moved raft that day
-#   - Spotty data at TS-SW until May 1st 2021, because of bad logger code
-#   - Should we read in the output tables from Campbell loggers too?
 
 
-# 1. Libraries and workspace ----------------------------------------------
+
+# 1. Libraries and work space ----------------------------------------------
 
 remove(list = ls())
 
 library(xts)
 library(dygraphs)
-library(purrr)
-library(lubridate)
 library(tidyverse)
-library(stringr)
 
 source("functions/download_fun.R")
 source("functions/prelim_plot.R")
 
-data_dir <- "data/2022/"
+data_dir <- "data/"
 
 # 2. Read the JL files ----------------------------------------------
 
@@ -35,6 +28,8 @@ data_dir <- "data/2022/"
 files <- list.files(paste0(data_dir), full.names = TRUE)
 #Selects only the GP files
 eosGP_files <- files[str_detect(files, "_eosGP")]
+#Selects only data from 2022
+eosGP_files <- eosGP_files[str_detect(eosGP_files, "2022")]
 
 #Run the download function and combine GP files
 data <- eosGP_files %>% 
@@ -82,8 +77,6 @@ data_DK <- data %>%
 rm(SiteName, temp)
 
 #   3b. TS-SW cleaning ------------------------------------------------------
-#Notes:
-#   - Spotty data at TS-SW until May 1st, because of bad logger code
 
 SiteName <- "TS_SW"
 
@@ -102,8 +95,6 @@ data_TS <- data %>%
 rm(SiteName, temp)
 
 #   3c. ND-SW cleaning ------------------------------------------------------
-#Notes:
-#   - 
 
 SiteName <- "ND_SW"
 
@@ -138,7 +129,10 @@ gg_cleaned <- ggplot(data = data_cleaned,
 rm(data_DK, data_ND, data_TS, df, SiteName)
 
 
+
+
 # 4. Convert time zone from EDT to EST at JL ---------------------------------------------------
+
 
 hrs <- hours(1)
 # Subtract an hour to convert all data to EST
